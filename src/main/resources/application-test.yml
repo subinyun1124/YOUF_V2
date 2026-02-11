@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://3.39.234.47:5432/youf
+    url: jdbc:postgresql://3.36.247.178:5432/youf
     username: admin
     password: admin1234
     driver-class-name: org.postgresql.Driver
@@ -15,7 +15,7 @@ spring:
 
 flask:
   api:
-    base-url: http://3.39.234.47:5001
+    base-url: http://3.36.247.178:5001
 
 file:
   upload-dir: /home/ubuntu/youf/file  # 원하는 저장 경로 설정

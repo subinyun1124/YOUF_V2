@@ -17,6 +17,9 @@ public class SpringAIConfig {
     @Value("${spring.ai.openai.api-key:#{null}}")
     private String openAiApiKey;
 
+    @Value("${spring.ai.openai.api-url}")
+    private String openAiApiUrl;
+
     @Value("${openai.model:gpt-4}")
     private String openAiModel;
 
