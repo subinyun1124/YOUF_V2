@@ -28,7 +28,7 @@ public class OpenAiKeywordGenerationService implements KeywordGenerationService 
     @Value("${spring.ai.openai.api-key}")
     private String apiKey;
 
-    @Value("${openai.api.url}")
+    @Value("${spring.ai.openai.api-url}")
     private String apiUrl;
 
     @Autowired
