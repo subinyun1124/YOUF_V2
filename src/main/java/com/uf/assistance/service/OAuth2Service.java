@@ -72,7 +72,7 @@ public class OAuth2Service {
         body.add("client_id", googleClientId);
         body.add("client_secret", googleClientSecret);
 //        body.add("redirect_uri", "com.example.app:/oauth2callback");  // 모바일 앱의 리다이렉트 URI
-        body.add("redirect_uri", "http://3.39.234.47:3000/");  // 모바일 앱의 리다이렉트 URI
+        body.add("redirect_uri", "http://3.36.247.178:3000/");  // 모바일 앱의 리다이렉트 URI
         body.add("grant_type", "authorization_code");
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);

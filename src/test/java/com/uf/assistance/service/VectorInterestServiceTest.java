@@ -53,7 +53,7 @@ class VectorInterestServiceTest {
 
     private ObjectMapper objectMapper;
     private VectorInterestService vectorInterestService;
-    private final String flaskBaseUrl = "http://3.39.234.47:5001";
+    private final String flaskBaseUrl = "http://3.36.247.178:5001";
 
     @BeforeEach
     void setUp() {
