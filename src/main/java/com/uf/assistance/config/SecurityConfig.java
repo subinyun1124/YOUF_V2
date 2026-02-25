@@ -110,14 +110,14 @@ public class SecurityConfig {
         http.with(new CustomSecurityFilterManager(jwtTokenProvider, tokenService), CustomSecurityFilterManager::build);
 
         // 인증 실패 가로채기
-        http.exceptionHandling(exception -> exception
-                .authenticationEntryPoint((request, response, authException) -> {
-                    CustomResponseUtil.fail(response, "login", "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    CustomResponseUtil.fail(response, "login", "권한이 없습니다.", HttpStatus.FORBIDDEN);
-                })
-        );
+//        http.exceptionHandling(exception -> exception
+//                .authenticationEntryPoint((request, response, authException) -> {
+//                    CustomResponseUtil.fail(response, "login", "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
+//                })
+//                .accessDeniedHandler((request, response, accessDeniedException) -> {
+//                    CustomResponseUtil.fail(response, "login", "권한이 없습니다.", HttpStatus.FORBIDDEN);
+//                })
+//        );
 
 
         // OAuth2 설정
