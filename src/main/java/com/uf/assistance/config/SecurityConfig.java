@@ -9,13 +9,11 @@ import com.uf.assistance.handler.JwtAuthenticationEntryPoint;
 import com.uf.assistance.handler.OAuth2SuccessHandler;
 import com.uf.assistance.service.OAuth2UserService;
 import com.uf.assistance.service.TokenService;
-import com.uf.assistance.util.CustomResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -107,7 +105,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
         );
         // 커스텀 보안 필터 관리자 설정
-        http.with(new CustomSecurityFilterManager(jwtTokenProvider, tokenService), CustomSecurityFilterManager::build);
+//        http.with(new CustomSecurityFilterManager(jwtTokenProvider, tokenService), CustomSecurityFilterManager::build);
 
         // 인증 실패 가로채기
 //        http.exceptionHandling(exception -> exception
@@ -138,12 +136,15 @@ public class SecurityConfig {
                         "/api/join/**",
                         "/api/oauth2/**",
                         "/api/oauth2/login/google",
-                        "/api/image/**").permitAll()
+                        "/api/image/**",
+                        "/api/test/**"   // API TEST 추가
+                ).permitAll()
 //                .requestMatchers("/api/admin/**").hasRole(UserRole.ADMIN.name())
 //                .requestMatchers("/api/auth/**").permitAll()
 //                .requestMatchers("/api/admin/**").permitAll() //임시로 모든 요청 허용
                 .requestMatchers("/chat/**").permitAll() //WebSocket 엔드포인트 허용
-                .requestMatchers("/api/auth/**").authenticated());
+                .requestMatchers("/api/auth/**").authenticated()
+                .anyRequest().permitAll());   // API TEST 추가;
 
         return http.build();
     }

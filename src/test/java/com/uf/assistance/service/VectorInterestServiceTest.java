@@ -371,13 +371,13 @@ class VectorInterestServiceTest {
                 .thenReturn(interestWithVector);
 
         // When
-        Interest result = vectorInterestService.findOrCreateInterest(keyword);
+        List<Interest> result = vectorInterestService.findOrCreateInterest(keyword);
 
         // Then
         assertNotNull(result);
-        assertEquals(keyword, result.getKeyword());
-        assertArrayEquals(new float[]{0.1f, 0.2f, 0.3f}, result.getVector());
-        verify(interestRepository).findByKeyword(keyword);
+        Interest interest = result.get(0);
+        assertEquals(keyword, interest.getKeyword());
+        assertArrayEquals(new float[]{0.1f, 0.2f, 0.3f}, interest.getVector());        verify(interestRepository).findByKeyword(keyword);
         verify(jdbcTemplate).queryForObject(
                 eq("SELECT * FROM interest WHERE id = ?"),
                 any(VectorInterestService.InterestRowMapper.class),
@@ -417,13 +417,13 @@ class VectorInterestServiceTest {
         when(interestRepository.save(any(Interest.class))).thenReturn(newInterest);
 
         // When
-        Interest result = vectorInterestService.findOrCreateInterest(keyword);
+        List<Interest> result = vectorInterestService.findOrCreateInterest(keyword);
 
         // Then
         assertNotNull(result);
-        assertEquals(keyword, result.getKeyword());
-        assertArrayEquals(new float[]{0.1f, 0.2f, 0.3f}, result.getVector());
-
+        Interest interest = result.get(0);
+        assertEquals(keyword, interest.getKeyword());
+        assertArrayEquals(new float[]{0.1f, 0.2f, 0.3f}, interest.getVector());
         // 저장 검증
         verify(interestRepository).save(any(Interest.class));
 

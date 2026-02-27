@@ -148,6 +148,11 @@ public class UserService implements UserDetailsService {
         log.debug("사용자 로드 시도 : "+userId);
         User userPS =userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("userId: " + userId + "를 데이터베이스에서 찾을 수 없습니다."));
+
+        log.debug("DB password = {}", userPS.getPassword());
+        log.debug("DB hash = {}", userPS.getPassword());
+        log.debug("직접 match = {}",
+                passwordEncoder.matches("1234", userPS.getPassword()));
         return new LoginUser(userPS);
     }
 

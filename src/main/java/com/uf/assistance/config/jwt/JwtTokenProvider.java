@@ -4,6 +4,7 @@ import com.uf.assistance.domain.user.UserRole;
 import com.uf.assistance.dto.user.TokenDTO;
 import com.uf.assistance.service.UserService;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
@@ -34,6 +35,11 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secretKey = JwtVO.SECRET;
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
 //    private final Key encodedKey;
     private SecretKey key;
     private static final String BEARER_TYPE = "Bearer";
@@ -51,8 +57,9 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-        // Plain String을 바로 byte[]로 변환하여 SecretKey 생성
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        // Base64 디코딩
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
@@ -69,19 +76,20 @@ public class JwtTokenProvider {
         //토큰 생성시간
         Instant now = Instant.from(OffsetDateTime.now());
         //accessToken 만료시간
+        Instant accessTokenExpirationDate = now.plusMillis(accessTokenValidationTime);
         Instant refreshTokenExpirationDate = now.plusMillis(refreshTokenValidationTime);
 
         //accessToken 생성
         String accessToken = Jwts.builder()
                 .subject(subject)
-                .claim("roles", role)
-                .expiration(Date.from(refreshTokenExpirationDate))
+                .claim("roles", role.name())
+                .expiration(Date.from(accessTokenExpirationDate))
                 .signWith(key)
                 .compact();
 
         //refreshToken 생성
         String refreshToken = Jwts.builder()
-                .expiration(Date.from(now.plusMillis(refreshTokenValidationTime)))
+                .expiration(Date.from(refreshTokenExpirationDate))
                 .signWith(key)
                 .compact();
 
@@ -107,14 +115,20 @@ public class JwtTokenProvider {
             throw new RuntimeException("권한정보가 없는 토큰입니다.");
         }
 
-        Collection<? extends GrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        Collection<? extends GrantedAuthority> roles =
+                Arrays.stream(claims.get("roles").toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
         UserDetails user = new User(claims.getSubject(), "", roles);
         return new UsernamePasswordAuthenticationToken(user, "", roles);
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");

@@ -43,7 +43,7 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+        System.out.println("비번 :" + passwordEncoder.encode("1234"));
         testUser = User.builder()
                 .userId("1")
                 .username("John")
