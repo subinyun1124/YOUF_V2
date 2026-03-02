@@ -5,7 +5,6 @@ import com.uf.assistance.config.jwt.JwtProcess;
 import com.uf.assistance.config.jwt.JwtVO;
 import com.uf.assistance.domain.user.User;
 import com.uf.assistance.domain.user.UserRepository;
-import com.uf.assistance.domain.user.UserRole;
 import com.uf.assistance.dto.user.*;
 import com.uf.assistance.handler.exception.CustomApiException;
 import com.uf.assistance.handler.exception.ResourceNotFoundException;
@@ -46,7 +45,7 @@ public class UserService implements UserDetailsService {
 
         // 2. 패스워드 인코딩 - 회원가입
         User user = userRepository.save(joinReqDto.toEntity(passwordEncoder));
-        user.updateRole(UserRole.USER);
+//        user.updateRole(UserRole.USER);
 
         // 3. dto 응답
         return new JoinRespDto(user);

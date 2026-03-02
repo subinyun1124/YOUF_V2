@@ -133,6 +133,7 @@ public class SecurityConfig {
                         "/swagger-ui.html",
                         "/api/login/**",
                         "/api/login2/**",
+                        "/api/auth/**",
                         "/api/join/**",
                         "/api/oauth2/**",
                         "/api/oauth2/login/google",
