@@ -56,6 +56,7 @@ public class UserController {
         TokenRespDto tokenResponseDTO = TokenRespDto.builder()
                 .isNewMember(false)
                 .accessToken(tokenDTO.getAccessToken())
+                .userId(loginReqDto.getUserId())
                 .build();
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인2 성공", CustomDateUtil.toStringFormat(LocalDateTime.now()), tokenResponseDTO), HttpStatus.OK);
     }

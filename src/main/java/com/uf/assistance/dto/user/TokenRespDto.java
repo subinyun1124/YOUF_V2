@@ -13,4 +13,5 @@ public class TokenRespDto {
 
     private String accessToken;
     private boolean isNewMember;
+    private String userId;
 }
