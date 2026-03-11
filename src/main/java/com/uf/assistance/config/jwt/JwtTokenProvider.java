@@ -34,7 +34,7 @@ public class JwtTokenProvider {
     private final ApplicationContext context;
 
     @Value("${jwt.secret}")
-    private String secretKey = JwtVO.SECRET;
+    private String secretKey;
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

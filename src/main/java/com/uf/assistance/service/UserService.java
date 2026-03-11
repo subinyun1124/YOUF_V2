@@ -1,7 +1,8 @@
 package com.uf.assistance.service;
 
 import com.uf.assistance.config.auth.LoginUser;
-import com.uf.assistance.config.jwt.JwtProcess;
+//import com.uf.assistance.config.jwt.JwtProcess;
+import com.uf.assistance.config.jwt.JwtTokenProvider;
 import com.uf.assistance.config.jwt.JwtVO;
 import com.uf.assistance.domain.user.User;
 import com.uf.assistance.domain.user.UserRepository;
@@ -32,6 +33,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //서비스는 DTO로 요청받고 DTO로 응답한다.
     @Transactional //트랜잭션이 메서드 시작할때, 시작되고, 종료될 때 함께 종료
@@ -66,7 +68,7 @@ public class UserService implements UserDetailsService {
 
         // JWT 생성
         LoginUser loginUser = new LoginUser(user);
-        String jwtToken = JwtProcess.create(loginUser);
+        TokenDTO jwtToken = tokenService.createToken(user);
 
         // HTTP 응답 헤더에 JWT 추가
         response.addHeader(JwtVO.HEADER_STRING, JwtVO.TOKEN_PREFIX + jwtToken);
@@ -76,7 +78,7 @@ public class UserService implements UserDetailsService {
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        return new LoginRespDto(user, jwtToken);
+        return new LoginRespDto(user, jwtToken.getAccessToken());
     }
 
     public TokenDTO login2(LoginReqDto loginReqDto, HttpServletResponse response) {

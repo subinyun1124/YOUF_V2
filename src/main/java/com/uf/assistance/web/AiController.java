@@ -56,14 +56,16 @@ public class AiController {
             @RequestParam(value = "creator", required = false) String creator,
             @RequestParam(value = "active", required = false) String active,
             @RequestParam(value = "hidden", required = false) String hidden ) {
-
+        System.out.println("creator = " + creator);
+        System.out.println("isActive = " + active);
+        System.out.println("isHidden = " + hidden);
         List<CustomAI> list;
 
         Boolean isActive = active != null ? "Y".equalsIgnoreCase(active) : null;
         Boolean isHidden = hidden != null ? "Y".equalsIgnoreCase(hidden) : null;
 
         list = aiService.getCustomAIs(isActive, isHidden, creator); // 부분 조건 적용
-
+        System.out.println("list size = " + list.size());
         List<CustomAIRespDto> customAIRespDtoList = list.stream()
                 .map(CustomAIRespDto::from)
                 .collect(Collectors.toList());
