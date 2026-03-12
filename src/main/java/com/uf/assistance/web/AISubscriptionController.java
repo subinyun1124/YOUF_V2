@@ -24,7 +24,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/auth/aisubsciption")
+@RequestMapping("/api/auth/aisubscription")
 @Tag(name = "AI 구독", description = "AI 구독 CRUD 관련 API")
 public class AISubscriptionController {
 
@@ -48,7 +48,7 @@ public class AISubscriptionController {
     @GetMapping("/relation/{userId}")
     @Transactional(readOnly = true)
     @Operation(summary = "사용자 ID 기준으로 구독정보 가져오기")
-    public ResponseEntity<ResponseDto<List<AISubScriptionRespDto>>> getSubscriptionsbyUserId(@PathVariable String userId) {
+    public ResponseEntity<ResponseDto<List<AISubScriptionRespDto>>> getSubscriptionsbyUserId(@PathVariable("userId") String userId) {
         try {
             List<AISubScriptionRespDto> customAIRespDtos = aiSubscriptionService.getSubscriptions(userId);
             return new ResponseEntity<>(new ResponseDto<>(1, "사용자 구독리스트 조회", CustomDateUtil.toStringFormat(LocalDateTime.now()), customAIRespDtos), HttpStatus.OK);
