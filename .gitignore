@@ -1,24 +1,28 @@
 # Gradle
 .gradle/
 build/
+out/
 
 # OS
 .DS_Store
 
 # Logs
+logs/
 *.log
+
+# Upload files
+uploads/
 
 # Spring config (secrets)
 src/main/resources/application.yml
 src/main/resources/application-dev.yml
 src/main/resources/application-local.yml
 src/main/resources/application-test.yml
+src/main/resources/application-*.yml
 
 # IDE
 .idea/
 *.iml
 .vscode/
 
-# application config
-src/main/resources/application-*.yml
 
