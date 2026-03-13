@@ -35,7 +35,7 @@ public class AISubscriptionController {
     @GetMapping("/{userId}")
     @Transactional(readOnly = true)
     @Operation(summary = "사용자 ID 기준으로 CustomAI 구독 목록 가져오기")
-    public ResponseEntity<ResponseDto<List<CustomAIRespDto>>> getSubscribedCustomAIsbyUserId(@PathVariable String userId) {
+    public ResponseEntity<ResponseDto<List<CustomAIRespDto>>> getSubscribedCustomAIsbyUserId(@PathVariable("userId") String userId) {
         try {
             List<CustomAIRespDto> customAIRespDtos = aiSubscriptionService.getSubscribedCustomAIs(userId);
             return new ResponseEntity<>(new ResponseDto<>(1, "사용자 구독리스트 조회", CustomDateUtil.toStringFormat(LocalDateTime.now()), customAIRespDtos), HttpStatus.OK);

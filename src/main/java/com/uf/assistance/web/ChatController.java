@@ -86,7 +86,7 @@ public class ChatController {
     @GetMapping("/messages/subscription/{subscriptionId}")
     @ResponseBody
     @Transactional
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getMessages(@PathVariable Long subscriptionId) {
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getMessages(@PathVariable("subscriptionId") Long subscriptionId) {
         List<Chat> messages = chatService.getMessagesByAiId(subscriptionId);
 
         // Chat 객체를 DTO로 변환
@@ -101,7 +101,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID(@PathVariable String userId) {
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID(@PathVariable("userId") String userId) {
 
         List<Chat> messages = chatService.getLastMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 AI 의 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID(@PathVariable String userId) {
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID(@PathVariable("userId") String userId) {
 
         List<Chat> messages = chatService.getLastAIMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
@@ -131,7 +131,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     public ResponseEntity<ResponseDto<Page<ChatRespDto>>> getMessagesWithPaginationAsc(
-            @PathVariable Long subscriptionId,
+            @PathVariable("subscriptionId") Long subscriptionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
@@ -148,7 +148,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     public ResponseEntity<ResponseDto<Page<ChatRespDto>>> getMessagesWithPaginationDesc(
-            @PathVariable Long subscriptionId,
+            @PathVariable("subscriptionId") Long subscriptionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
