@@ -67,4 +67,18 @@ public class UserController {
         log.debug("authentication.getName() : " + userId);
         return userService.findUserById(userId);
     }
+
+    @GetMapping("/auth/check/{userID}")
+    public ResponseEntity<ResponseDto<Boolean>> checkUserId(@PathVariable String userId){
+        boolean exist = userService.existsByUserId(userId);
+
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        1,
+                        "아이디 중복체크",
+                        CustomDateUtil.toStringFormat(LocalDateTime.now()),
+                        !exist
+                )
+        );
+    }
 }

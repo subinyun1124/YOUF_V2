@@ -157,4 +157,8 @@ public class UserService implements UserDetailsService {
         return new LoginUser(userPS);
     }
 
+    public boolean existsByUserId(String userId) {
+        return userRepository.existsByUserId(userId);
+    }
+
 }
