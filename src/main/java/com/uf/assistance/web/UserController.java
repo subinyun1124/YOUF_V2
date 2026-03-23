@@ -68,8 +68,8 @@ public class UserController {
         return userService.findUserById(userId);
     }
 
-    @GetMapping("/auth/check/{userID}")
-    public ResponseEntity<ResponseDto<Boolean>> checkUserId(@PathVariable String userId){
+    @GetMapping("/auth/check/{userId}")
+    public ResponseEntity<ResponseDto<Boolean>> checkUserId(@PathVariable("userId") String userId){
         boolean exist = userService.existsByUserId(userId);
 
         return ResponseEntity.ok(
@@ -77,7 +77,7 @@ public class UserController {
                         1,
                         "아이디 중복체크",
                         CustomDateUtil.toStringFormat(LocalDateTime.now()),
-                        !exist
+                        exist
                 )
         );
     }
