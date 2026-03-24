@@ -152,7 +152,7 @@ public class ScheduleJobController {
     @GetMapping("/job")
     @Operation(summary = "사용자 ID + AISubscription 기준 스케줄러 조희")
     public ResponseEntity<ResponseDto<List<SchedulerRespDto>>> getJobByUserAndSubscription(
-            @RequestParam String userId,
+            @RequestParam("userId") String userId,
             @RequestParam(value = "aiSubscriptionId", required = false) Long aiSubscriptionId) {
 
         List<SchedulerRespDto> respDtos = scheduledJobService.getJobByUserAndSubscription(userId, aiSubscriptionId);

@@ -43,7 +43,7 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessageAI/{subscriptionId}")
     @SendTo("/topic/public/ai/{subscriptionId}")
-    public ResponseEntity<?> sendMessageAI(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable Long subscriptionId) {
+    public ResponseEntity<?> sendMessageAI(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId) {
 
         if (subscriptionId == null) {
             throw new IllegalArgumentException("roomId is missing in the WebSocket request");
@@ -51,7 +51,7 @@ public class ChatController {
 
         ChatRespDto chatRespDtoUser = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
         ChatRespDto chatRespDtoAI = chatService.sendMessageAI(chatReqDto, subscriptionId, MessageType.ASSISTANT);
-        System.out.println("📨AI - 받은 메시지: " + chatRespDtoAI.getContent() + " / From : " + chatReqDto.getSender());
+        System.out.println("AI - 받은 메시지: " + chatRespDtoAI.getContent() + " / From : " + chatReqDto.getSender());
 
         messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, chatRespDtoUser);
         messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, chatRespDtoAI);
@@ -61,9 +61,9 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage/{subscriptionId}")
     @SendTo("/topic/public/ai/{subscriptionId}")
-    public ResponseEntity<?> sendMessage(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable Long subscriptionId) {
+    public ResponseEntity<?> sendMessage(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId) {
 
-        System.out.println("📨 받은 메시지: " + chatReqDto.getContent() + " / From : " + chatReqDto.getSender());
+        System.out.println("받은 메시지: " + chatReqDto.getContent() + " / From : " + chatReqDto.getSender());
         ChatRespDto chatRespDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
 
         messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, chatRespDto);
@@ -73,11 +73,11 @@ public class ChatController {
 
     @MessageMapping("/chat.addUser/{subscriptionId}")
     @SendTo("/topic/public/{subscriptionId}")
-    public ResponseEntity<?> addUser(@Payload ChatReqDto chatReqDto, @DestinationVariable Long subscriptionId
+    public ResponseEntity<?> addUser(@Payload ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId
             , SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatReqDto.getSender());
-        headerAccessor.getSessionAttributes().put("subscriptionIdsubscriptionId", subscriptionId.toString());
+        headerAccessor.getSessionAttributes().put("subscriptionId", subscriptionId.toString());
 
         ChatRespDto chatRespDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.JOIN);
         return new ResponseEntity<>(new ResponseDto<>(1, "사용자 추가", CustomDateUtil.toStringFormat(LocalDateTime.now()), chatRespDto), HttpStatus.OK);
@@ -132,8 +132,8 @@ public class ChatController {
     @Transactional
     public ResponseEntity<ResponseDto<Page<ChatRespDto>>> getMessagesWithPaginationAsc(
             @PathVariable("subscriptionId") Long subscriptionId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
         Page<Chat> messages = chatService.getMessagesByAiIdWithPaginationAscending(subscriptionId, page, size);
 
@@ -149,8 +149,8 @@ public class ChatController {
     @Transactional
     public ResponseEntity<ResponseDto<Page<ChatRespDto>>> getMessagesWithPaginationDesc(
             @PathVariable("subscriptionId") Long subscriptionId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
         Page<Chat> messages = chatService.getMessagesByAiIdWithPaginationDescending(subscriptionId, page, size);
 
