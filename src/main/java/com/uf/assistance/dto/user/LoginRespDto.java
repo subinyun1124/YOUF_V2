@@ -6,9 +6,12 @@ import com.uf.assistance.util.CustomDateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class LoginRespDto {
+    private Long id;
     private String userId;
     private String username;
     private String email;
@@ -18,16 +21,18 @@ public class LoginRespDto {
     private UserRole role;
 
     public LoginRespDto(User user) {
+        this.id = user.getId();
         this.userId = user.getUserId();
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.loginAt = CustomDateUtil.toStringFormat(user.getCreatedAt());
+        this.loginAt = CustomDateUtil.toStringFormat(LocalDateTime.now());
 //        this.jwtToken = jwtToken;
         this.social = user.isSocial();
         this.role = user.getRole();
     }
 
     public LoginRespDto(User user, String jwtToken) {
+        this.id = user.getId();
         this.userId = user.getUserId();
         this.username = user.getUsername();
         this.email = user.getEmail();

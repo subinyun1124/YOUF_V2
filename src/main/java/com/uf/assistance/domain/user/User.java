@@ -11,8 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -22,13 +20,17 @@ import java.util.List;
 @DynamicUpdate
 public class User { //extends 시간설정 (상속)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 로그인 ID
     @Column(updatable = false, unique = true)
     private String userId;
 
     @Column(nullable = false, length = 60) //패스워드 인코딩(BCrypt)
     private String password;
 
-    @Column(nullable = false, length = 21, unique = true) //id
+    @Column(nullable = false, length = 21, unique = true)
     private String username;
 
     private String nickname;
@@ -62,7 +64,8 @@ public class User { //extends 시간설정 (상속)
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(String userId, String username, String password, String email, UserRole role, boolean social, Provider provider, LocalDateTime createdAt){
+    public User(Long id, String userId, String username, String password, String email, UserRole role, boolean social, Provider provider, LocalDateTime createdAt){
+        this.id = id;
         this.userId = userId;
         this.username = username;
         this.password = password;
