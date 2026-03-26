@@ -87,7 +87,7 @@ public class ChatService {
     public ChatRespDto sendMessage(ChatReqDto chatReqDto, Long aiSubscriptionId, MessageType messageType) {
         logger.debug("사용자 메시지 전송 시작 (aiSubscriptionId: {})", aiSubscriptionId);
 
-        User user = userService.findUserbyUsername(chatReqDto.getSender());
+        User user = userService.findById(chatReqDto.getSender());
         AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(aiSubscriptionId);
 
         Chat chat = ChatReqDto.toEntity(user, chatReqDto.getContent(), aiSubscription, messageType);
@@ -103,7 +103,7 @@ public class ChatService {
         return chatRepository.findByAiSubscriptionIdOrderByTimestamp(aiSubscriptionId);
     }
 
-    public List<Chat> getMessagesByuserId(String userId) {
+    public List<Chat> getMessagesByuserId(Long userId) {
         return chatRepository.findBySender_UserIdOrderByTimestamp(userId);
     }
 
@@ -117,11 +117,11 @@ public class ChatService {
         return chatRepository.findByAiSubscriptionIdOrderByTimestampDesc(aiSubscriptionId, pageable);
     }
 
-    public List<Chat> getLastAIMessagesForUser(String userId) {
+    public List<Chat> getLastAIMessagesForUser(Long userId) {
         return chatRepository.findLatestASSISTANTMessageBySender(userId);
     }
 
-    public List<Chat> getLastMessagesForUser(String userId) {
+    public List<Chat> getLastMessagesForUser(Long userId) {
         return chatRepository.findLatestMessageIdAndSender(userId);
     }
 }

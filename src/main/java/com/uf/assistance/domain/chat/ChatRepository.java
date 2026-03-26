@@ -12,7 +12,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     List<Chat> findByAiSubscriptionIdOrderByTimestamp(Long aiSubscriptionId);
 
-    List<Chat> findBySender_UserIdOrderByTimestamp(String userId);
+    List<Chat> findBySender_UserIdOrderByTimestamp(Long userId);
 
     Page<Chat> findByAiSubscriptionId(Long aiSubscriptionId, Pageable pageable);
 
@@ -22,21 +22,21 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     SELECT c FROM Chat c
     WHERE c.id IN (
         SELECT MAX(cm.id) FROM Chat cm
-        WHERE cm.sender.userId = :userId
+        WHERE cm.sender.id = :userId
         GROUP BY cm.aiSubscription.id
         )
     """)
-    List<Chat> findLatestMessageIdAndSender(@Param("userId") String userId);
+    List<Chat> findLatestMessageIdAndSender(@Param("userId") Long userId);
 
     @Query("""
     SELECT c FROM Chat c
     WHERE c.id IN (
         SELECT MAX(cm.id) FROM Chat cm
-        WHERE cm.sender.userId = :userId
+        WHERE cm.sender.id = :userId
             AND cm.type = 'ASSISTANT'
         GROUP BY cm.aiSubscription.id
         )
     """)
-    List<Chat> findLatestASSISTANTMessageBySender(@Param("userId") String userId);
+    List<Chat> findLatestASSISTANTMessageBySender(@Param("userId") Long userId);
 }
 

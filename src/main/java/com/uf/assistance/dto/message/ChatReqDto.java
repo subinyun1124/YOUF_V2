@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatReqDto {
-    private String sender;
+    private Long sender;
     private String content;
     private MessageType type;
     private LocalDateTime timestamp;
@@ -28,7 +28,7 @@ public class ChatReqDto {
 
     @JsonCreator
     public ChatReqDto(
-            @JsonProperty("sender") String sender,
+            @JsonProperty("sender") Long sender,
             @JsonProperty("content") String content,
             @JsonProperty("type") MessageType type) {
         this.sender = sender;

@@ -101,7 +101,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID(@PathVariable("userId") String userId) {
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID(@PathVariable("userId") Long userId) {
 
         List<Chat> messages = chatService.getLastMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class ChatController {
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 AI 의 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID(@PathVariable("userId") String userId) {
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID(@PathVariable("userId") Long userId) {
 
         List<Chat> messages = chatService.getLastAIMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
