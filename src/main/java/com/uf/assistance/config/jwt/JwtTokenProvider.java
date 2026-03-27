@@ -14,8 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -68,7 +66,7 @@ public class JwtTokenProvider {
      * @return TokenDTO
      * subject는 Form Login방식의 경우 userId, Social Login방식의 경우 email
      */
-    public TokenDTO createTokenReqDto(String subject, UserRole role) {
+    public TokenDTO createTokenReqDto(String subject, Long id, UserRole role) {
 
         //권한을 하나의 String으로 합침
 //        String authority = roles.stream().map(UserRole::getType).collect(Collectors.joining(","));
@@ -82,6 +80,7 @@ public class JwtTokenProvider {
         //accessToken 생성
         String accessToken = Jwts.builder()
                 .subject(subject)
+                .claim("id", id)
                 .claim("roles", role.name())
                 .expiration(Date.from(accessTokenExpirationDate))
                 .signWith(key)
@@ -119,7 +118,26 @@ public class JwtTokenProvider {
                 Arrays.stream(claims.get("roles").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-        UserDetails user = new User(claims.getSubject(), "", roles);
+
+        Object idClaim = claims.get("id");
+        if (idClaim == null) {
+            throw new RuntimeException("토큰에 id가 없습니다.");
+        }
+        Long id;
+        if (idClaim instanceof Integer) {
+            id = ((Integer) idClaim).longValue();
+        } else if (idClaim instanceof Long) {
+            id = (Long) idClaim;
+        } else {
+            id = Long.parseLong(idClaim.toString());
+        }
+
+        String userId = claims.getSubject();
+        if (userId == null) {
+            throw new RuntimeException("토큰에 subject가 없습니다.");
+        }
+
+        CustomUserDetails user = new CustomUserDetails(id, userId, roles);
         return new UsernamePasswordAuthenticationToken(user, "", roles);
     }
 

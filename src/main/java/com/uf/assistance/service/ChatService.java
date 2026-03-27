@@ -103,7 +103,7 @@ public class ChatService {
         return chatRepository.findByAiSubscriptionIdOrderByTimestamp(aiSubscriptionId);
     }
 
-    public List<Chat> getMessagesByuserId(Long userId) {
+    public List<Chat> getMessagesByuserId(String userId) {
         return chatRepository.findBySender_UserIdOrderByTimestamp(userId);
     }
 

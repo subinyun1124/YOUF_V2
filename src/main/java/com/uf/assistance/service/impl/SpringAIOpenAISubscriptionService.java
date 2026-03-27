@@ -65,9 +65,9 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
     }
 
     @Override
-    public List<AISubScriptionRespDto> getSubscriptions(String userId) {
+    public List<AISubScriptionRespDto> getSubscriptions(Long userId) {
         logger.debug("사용자 ID: {}의 구독 목록 조회", userId);
-        User user = userService.findUserEntityById(userId);
+        User user = userService.findById(userId);
 
         List<AISubscription> AIsubscriptionList = aiSubscriptionRepository.findByUser(user);
         List<AISubScriptionRespDto> AISubRespDtoList = new ArrayList<>();

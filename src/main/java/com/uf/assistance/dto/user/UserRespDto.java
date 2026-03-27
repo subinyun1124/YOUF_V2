@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserRespDto {
+    private Long id;
     private String userId;
     private String username;
     private String email;
@@ -15,6 +16,6 @@ public class UserRespDto {
     private boolean social;
 
     public static UserRespDto from(User user) {
-        return new UserRespDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getRole(), user.isSocial());
+        return new UserRespDto(user.getId(), user.getUserId(), user.getUsername(), user.getEmail(), user.getRole(), user.isSocial());
     }
 }

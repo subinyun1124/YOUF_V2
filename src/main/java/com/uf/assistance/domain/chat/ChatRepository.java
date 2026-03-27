@@ -12,7 +12,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     List<Chat> findByAiSubscriptionIdOrderByTimestamp(Long aiSubscriptionId);
 
-    List<Chat> findBySender_UserIdOrderByTimestamp(Long userId);
+    List<Chat> findBySender_UserIdOrderByTimestamp(String userId);
 
     Page<Chat> findByAiSubscriptionId(Long aiSubscriptionId, Pageable pageable);
 

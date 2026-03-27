@@ -1,6 +1,6 @@
 package com.uf.assistance.web;
 
-import com.uf.assistance.config.auth.LoginUser;
+import com.uf.assistance.config.jwt.CustomUserDetails;
 import com.uf.assistance.dto.ResponseDto;
 import com.uf.assistance.dto.user.*;
 import com.uf.assistance.service.UserService;
@@ -63,7 +63,8 @@ public class UserController {
 
     @GetMapping("/auth/get-current-member")
     public UserRespDto getCurrentMember(Authentication authentication){
-        String userId = ((LoginUser) authentication.getPrincipal()).getUser().getUserId();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
         log.debug("authentication.getName() : " + userId);
         return userService.findUserById(userId);
     }

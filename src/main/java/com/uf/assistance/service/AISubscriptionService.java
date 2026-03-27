@@ -28,7 +28,7 @@ public interface AISubscriptionService {
      * @param userId 사용자 ID
      * @return 구독한 AI 목록
      */
-    List<AISubScriptionRespDto> getSubscriptions(String userId);
+    List<AISubScriptionRespDto> getSubscriptions(Long userId);
 
     /**
      * 사용자의 AI 구독 여부 확인

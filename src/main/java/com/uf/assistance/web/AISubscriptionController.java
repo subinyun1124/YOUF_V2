@@ -1,10 +1,10 @@
 package com.uf.assistance.web;
 
+import com.uf.assistance.domain.user.User;
 import com.uf.assistance.dto.ResponseDto;
 import com.uf.assistance.dto.ai.AISubScriptionReqDto;
 import com.uf.assistance.dto.ai.AISubScriptionRespDto;
 import com.uf.assistance.dto.ai.CustomAIRespDto;
-import com.uf.assistance.dto.user.UserRespDto;
 import com.uf.assistance.service.AISubscriptionService;
 import com.uf.assistance.service.UserService;
 import com.uf.assistance.util.CustomDateUtil;
@@ -45,10 +45,10 @@ public class AISubscriptionController {
         }
     }
 
-    @GetMapping("/relation/{userId}")
+    @GetMapping("/relation/{id}")
     @Transactional(readOnly = true)
     @Operation(summary = "사용자 ID 기준으로 구독정보 가져오기")
-    public ResponseEntity<ResponseDto<List<AISubScriptionRespDto>>> getSubscriptionsbyUserId(@PathVariable("userId") String userId) {
+    public ResponseEntity<ResponseDto<List<AISubScriptionRespDto>>> getSubscriptionsbyUserId(@PathVariable("id") Long userId) {
         try {
             List<AISubScriptionRespDto> customAIRespDtos = aiSubscriptionService.getSubscriptions(userId);
             return new ResponseEntity<>(new ResponseDto<>(1, "사용자 구독리스트 조회", CustomDateUtil.toStringFormat(LocalDateTime.now()), customAIRespDtos), HttpStatus.OK);
@@ -63,10 +63,10 @@ public class AISubscriptionController {
     public ResponseEntity<ResponseDto<AISubScriptionRespDto>> subscribe(@RequestBody AISubScriptionReqDto aiSubScriptionReqDto) {
 
         try {
-            UserRespDto userRespDto = userService.findUserById(aiSubScriptionReqDto.getUserId());
-            AISubScriptionRespDto aiSubScriptionRespDto = aiSubscriptionService.subscribe(aiSubScriptionReqDto.getUserId(), aiSubScriptionReqDto.getCustomAiId());
+            User user = userService.findById(aiSubScriptionReqDto.getUserId());
+            AISubScriptionRespDto aiSubScriptionRespDto = aiSubscriptionService.subscribe(user.getUserId(), aiSubScriptionReqDto.getCustomAiId());
 
-            return new ResponseEntity<>(new ResponseDto<>(1, "AI 구독성공 -" + userRespDto.getUsername(), CustomDateUtil.toStringFormat(LocalDateTime.now()), aiSubScriptionRespDto), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(1, "AI 구독성공 -" + user.getUsername(), CustomDateUtil.toStringFormat(LocalDateTime.now()), aiSubScriptionRespDto), HttpStatus.OK);
 
         }catch (Exception e) {
             return new ResponseEntity<>(new ResponseDto<>(-1, "AI 구독실패 " + e.getMessage(), CustomDateUtil.toStringFormat(LocalDateTime.now()), null), HttpStatus.NOT_FOUND);

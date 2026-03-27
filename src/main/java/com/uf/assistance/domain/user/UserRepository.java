@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findById(Long id);
     Optional<User> findByUserId(String userId);
     Optional<User> findByUsername(String userName); //Jpa NamedQuery 작동
 

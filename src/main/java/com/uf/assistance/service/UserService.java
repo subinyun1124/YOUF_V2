@@ -127,6 +127,13 @@ public class UserService implements UserDetailsService {
         return UserRespDto.from(user);
     }
 
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+
     public User findUserEntityById(String userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -157,11 +164,6 @@ public class UserService implements UserDetailsService {
 
     public boolean existsByUserId(String userId) {
         return userRepository.existsByUserId(userId);
-    }
-
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
 }
