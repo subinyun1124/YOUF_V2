@@ -50,7 +50,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
     }
 
     @Override
-    public List<CustomAIRespDto> getSubscribedCustomAIs(String userId) {
+    public List<CustomAIRespDto> getSubscribedCustomAIs(Long userId) {
         logger.debug("사용자 ID: {}의 구독 CustomAI 목록 조회", userId);
         User user = userService.findUserEntityById(userId);
 
@@ -67,7 +67,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
     @Override
     public List<AISubScriptionRespDto> getSubscriptions(Long userId) {
         logger.debug("사용자 ID: {}의 구독 목록 조회", userId);
-        User user = userService.findById(userId);
+        User user = userService.findUserEntityById(userId);
 
         List<AISubscription> AIsubscriptionList = aiSubscriptionRepository.findByUser(user);
         List<AISubScriptionRespDto> AISubRespDtoList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
 
 
     @Override
-    public boolean hasUserSubscribedAI(String userId, Long aiId) {
+    public boolean hasUserSubscribedAI(Long userId, Long aiId) {
         logger.debug("사용자 ID: {}의 AI ID: {} 구독 여부 확인", userId, aiId);
 
         User user = userService.findUserEntityById(userId);
@@ -92,7 +92,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
 
     @Override
     @Transactional
-    public AISubScriptionRespDto subscribe(String userId, Long aiId) {
+    public AISubScriptionRespDto subscribe(Long userId, Long aiId) {
         logger.debug("사용자 ID: {}의 AI ID: {} 구독 시작", userId, aiId);
 
         User user = userService.findUserEntityById(userId);
@@ -145,7 +145,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
 
     @Override
     @Transactional
-    public Map<String, String> unsubscribe(String userId, Long aiId) {
+    public Map<String, String> unsubscribe(Long userId, Long aiId) {
         logger.debug("사용자 ID: {}의 AI ID: {} 구독 취소", userId, aiId);
 
         User user = userService.findUserEntityById(userId);
@@ -216,7 +216,7 @@ public class SpringAIOpenAISubscriptionService implements AISubscriptionService 
 
     @Override
     @Transactional
-    public void updateLastUsed(String userId, Long aiId) {
+    public void updateLastUsed(Long userId, Long aiId) {
         logger.debug("사용자 ID: {}의 AI ID: {} 마지막 사용 시간 업데이트", userId, aiId);
 
         User user = userService.findUserEntityById(userId);

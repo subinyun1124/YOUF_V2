@@ -50,7 +50,7 @@ public class ChatService {
     public ChatRespDto sendMessageAI(ChatReqDto chatReqDto, Long aiSubscriptionId, MessageType messageType) {
         logger.debug("AI 메시지 전송 시작 (aiSubscriptionId: {})", aiSubscriptionId);
 
-        User user = userService.findUserbyUsername("GPT");
+        User user = userService.findUserEntityById(99L);
         AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(aiSubscriptionId);
 
         // 시스템 메시지와 사용자 메시지 간의 키워드 중간값 처리
@@ -87,7 +87,7 @@ public class ChatService {
     public ChatRespDto sendMessage(ChatReqDto chatReqDto, Long aiSubscriptionId, MessageType messageType) {
         logger.debug("사용자 메시지 전송 시작 (aiSubscriptionId: {})", aiSubscriptionId);
 
-        User user = userService.findById(chatReqDto.getSender());
+        User user = userService.findUserEntityById(chatReqDto.getSender());
         AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(aiSubscriptionId);
 
         Chat chat = ChatReqDto.toEntity(user, chatReqDto.getContent(), aiSubscription, messageType);

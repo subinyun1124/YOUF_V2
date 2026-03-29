@@ -19,8 +19,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.security.Key;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -154,7 +152,7 @@ public class OAuth2Service {
 //                .getSubject();
 //
 //        // 사용자 정보 조회
-//        User user = userRepository.findById(Long.parseLong(userId))
+//        User user = userRepository.findUserEntityById(Long.parseLong(userId))
 //                .orElseThrow(() -> new RuntimeException("User not found"));
 //
 //        return new UserRespDto.LoginRespDto(user, token);

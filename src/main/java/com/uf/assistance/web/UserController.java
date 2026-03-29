@@ -1,6 +1,5 @@
 package com.uf.assistance.web;
 
-import com.uf.assistance.config.jwt.CustomUserDetails;
 import com.uf.assistance.dto.ResponseDto;
 import com.uf.assistance.dto.user.*;
 import com.uf.assistance.service.UserService;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -61,13 +59,6 @@ public class UserController {
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인2 성공", CustomDateUtil.toStringFormat(LocalDateTime.now()), tokenResponseDTO), HttpStatus.OK);
     }
 
-    @GetMapping("/auth/get-current-member")
-    public UserRespDto getCurrentMember(Authentication authentication){
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUserId();
-        log.debug("authentication.getName() : " + userId);
-        return userService.findUserById(userId);
-    }
 
     @GetMapping("/auth/check/{userId}")
     public ResponseEntity<ResponseDto<Boolean>> checkUserId(@PathVariable("userId") String userId){

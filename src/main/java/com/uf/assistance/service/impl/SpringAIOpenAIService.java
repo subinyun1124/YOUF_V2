@@ -182,7 +182,7 @@ public class SpringAIOpenAIService implements AIService {
 
     @Override
     public BaseAIRespDto createBaseAI(BaseAIReqDto baseAIReqDto) {
-        User user = userService.findUserEntityById(baseAIReqDto.getUserId());
+        User user = userService.findUserEntityByUserId(baseAIReqDto.getUserId());
 
         BaseAI baseAI = baseAiRepository.save(BaseAIReqDto.toEntity(baseAIReqDto, user));
         return BaseAIRespDto.from(baseAI);
@@ -192,7 +192,7 @@ public class SpringAIOpenAIService implements AIService {
     public CustomAIRespDto createCustomAI(CustomAIReqDto customAIReqDto, MultipartFile file) {
         BaseAI baseAI = this.getBaseAIById(customAIReqDto.getBaseAiId());
 
-        User user = userService.findUserEntityById(customAIReqDto.getUserId());
+        User user = userService.findUserEntityByUserId(customAIReqDto.getUserId());
 
         // 이미지 처리
         String imageUrl;
@@ -214,7 +214,7 @@ public class SpringAIOpenAIService implements AIService {
         BaseAI baseAI = this.getBaseAIById(customAIReqDto.getBaseAiId());
 
         CustomAI customAI = this.getCustomAIById(customAIReqDto.getId());
-        User updateUser = userService.findUserEntityById(customAIReqDto.getUserId());
+        User updateUser = userService.findUserEntityByUserId(customAIReqDto.getUserId());
 
         // 이미지 처리
         String imageUrl;

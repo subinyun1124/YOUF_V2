@@ -1,21 +1,18 @@
 package com.uf.assistance.service;
 
 import com.uf.assistance.config.auth.LoginUser;
-//import com.uf.assistance.config.jwt.JwtProcess;
 import com.uf.assistance.config.jwt.JwtTokenProvider;
 import com.uf.assistance.config.jwt.JwtVO;
 import com.uf.assistance.domain.user.User;
 import com.uf.assistance.domain.user.UserRepository;
 import com.uf.assistance.dto.user.*;
 import com.uf.assistance.handler.exception.CustomApiException;
-import com.uf.assistance.handler.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -108,46 +105,23 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public User findUserbyUsername(String username) {
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found for username: " + username)));
-
-        return userOptional.get();
-    }
-
-    /**
-     * ID로 사용자 조회
-     * @param userId 사용자 ID
-     * @return 사용자 엔티티
-     */
-    public UserRespDto findUserById(String userId) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-
-        return UserRespDto.from(user);
-    }
-
-
-    public User findById(Long userId) {
-        return userRepository.findById(userId)
+    // PK
+    public User findUserEntityById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-
-    public User findUserEntityById(String userId) {
+    // 로그인용 ID
+    public User findUserEntityByUserId(String userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public User getCurrentUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            return findUserbyUsername(username);
-        }
-
-        return null;
+    public UserRespDto getUser(Long id) {
+        User user = findUserEntityById(id);
+        return UserRespDto.from(user);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -161,6 +135,7 @@ public class UserService implements UserDetailsService {
                 passwordEncoder.matches("1234", userPS.getPassword()));
         return new LoginUser(userPS);
     }
+
 
     public boolean existsByUserId(String userId) {
         return userRepository.existsByUserId(userId);
