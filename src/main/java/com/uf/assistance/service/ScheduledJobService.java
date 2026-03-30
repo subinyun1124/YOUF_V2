@@ -33,11 +33,12 @@ public class ScheduledJobService {
 
     @Transactional
     public SchedulerRespDto createJob(SchedulerReqDto schedulerReqDto) {
+
         AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(schedulerReqDto.getAisubscriptionId());
         User user = userService.findUserEntityById(schedulerReqDto.getUserId());
 
         String jobName = schedulerReqDto.getJobName();
-        String userId = schedulerReqDto.getUserId();
+        Long userId = schedulerReqDto.getUserId();
         String jobGroup = schedulerReqDto.getJobGroup();
 
         JobKey jobKey = new JobKey(jobName + "_" + userId, jobGroup);
@@ -157,7 +158,7 @@ public class ScheduledJobService {
         return "작업 수동 실행 완료";
     }
 
-    public List<SchedulerRespDto> getJobByUserAndSubscription(String userId, Long aiSubscriptionId) {
+    public List<SchedulerRespDto> getJobByUserAndSubscription(Long userId, Long aiSubscriptionId) {
         Specification<ScheduledJob> spec = Specification.where(null);
 
         if (userId != null) {

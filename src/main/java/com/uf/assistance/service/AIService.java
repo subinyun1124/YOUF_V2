@@ -65,7 +65,7 @@ public interface AIService {
      * @param createdUserID 생성자ID
      * @return active, hidden, createdUserID 에 따른, Custom AI 목록
      */
-    List<CustomAI> getCustomAIs(Boolean isActive, Boolean isHidden, String createdUserID);
+    List<CustomAI> getCustomAIs(Boolean isActive, Boolean isHidden, Long createdUserID);
 
     /**
      * @param isActive 활성화유무
@@ -74,7 +74,7 @@ public interface AIService {
      * @param pageable pagination paramter
      * @return active, hidden 에 따른, Custom AI 페이지네이션 목록
      */
-    Page<CustomAI> getCustomAIsWithPagination(Boolean isActive, Boolean isHidden, String createdUserID, Pageable pageable);
+    Page<CustomAI> getCustomAIsWithPagination(Boolean isActive, Boolean isHidden, Long createdUserID, Pageable pageable);
     /**
      * AI 생성
      * @return 생성한 AI 정보

@@ -17,9 +17,9 @@ public class CustomAiSpecification {
     }
 
     // 생성자 조건
-    public static Specification<CustomAI> hasCreateUser(String createdUserID) {
+    public static Specification<CustomAI> hasCreateUser(Long createdUserID) {
         return (root, query, criteriaBuilder) -> {
-            if (createdUserID == null || createdUserID.isEmpty()) {
+            if (createdUserID == null) {
                 return null;
             }
 

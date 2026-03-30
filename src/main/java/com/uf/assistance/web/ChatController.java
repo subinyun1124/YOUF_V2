@@ -9,6 +9,7 @@ import com.uf.assistance.dto.message.ChatReqDto;
 import com.uf.assistance.dto.message.ChatRespDto;
 import com.uf.assistance.service.ChatService;
 import com.uf.assistance.util.CustomDateUtil;
+import com.uf.assistance.util.CustomUserUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -97,12 +98,12 @@ public class ChatController {
         return new ResponseEntity<>(new ResponseDto<>(1, "채팅 목록 조회", CustomDateUtil.toStringFormat(LocalDateTime.now()), chatDtos), HttpStatus.OK);
     }
 
-    @GetMapping("/messages/latest/user/{userId}")
+    @GetMapping("/messages/latest/user")
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID(@PathVariable("userId") Long userId) {
-
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastMessagesbyUserID() {
+        Long userId = CustomUserUtil.getCurrentUserId();
         List<Chat> messages = chatService.getLastMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
         for(Chat chat : messages){
@@ -112,12 +113,13 @@ public class ChatController {
         return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 구독별 마지막 채팅 조회", CustomDateUtil.toStringFormat(LocalDateTime.now()), chatRespDtoList), HttpStatus.OK);
     }
 
-    @GetMapping("/messages/latest/AI/{userId}")
+    @Deprecated
+    @GetMapping("/messages/latest/AI")
     @ResponseBody
     @Transactional
     @Tag(name ="사용자의 구독별 AI 의 마지막 채팅 가져오기")
-    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID(@PathVariable("userId") Long userId) {
-
+    public ResponseEntity<ResponseDto<List<ChatRespDto>>> getLastAIMessagesbyUserID() {
+        Long userId = CustomUserUtil.getCurrentUserId();
         List<Chat> messages = chatService.getLastAIMessagesForUser(userId);
         List<ChatRespDto> chatRespDtoList = new ArrayList<>();
         for(Chat chat : messages){

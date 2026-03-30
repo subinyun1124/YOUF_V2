@@ -22,7 +22,7 @@ public class SchedulerReqDto {
     private Map<String, Object> jobData;
     private Status status;
     private Long aisubscriptionId;
-    private String userId;
+    private Long userId;
 
     public static ScheduledJob toEntity(SchedulerReqDto schedulerReqDto, AISubscription aisubscription, User user) {
 

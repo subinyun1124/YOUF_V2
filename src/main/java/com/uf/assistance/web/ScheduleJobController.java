@@ -7,6 +7,7 @@ import com.uf.assistance.dto.scheduler.SchedulerRespDto;
 import com.uf.assistance.handler.exception.CustomApiException;
 import com.uf.assistance.service.ScheduledJobService;
 import com.uf.assistance.util.CustomDateUtil;
+import com.uf.assistance.util.CustomUserUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -151,10 +152,8 @@ public class ScheduleJobController {
 
     @GetMapping("/job")
     @Operation(summary = "사용자 ID + AISubscription 기준 스케줄러 조희")
-    public ResponseEntity<ResponseDto<List<SchedulerRespDto>>> getJobByUserAndSubscription(
-            @RequestParam("userId") String userId,
-            @RequestParam(value = "aiSubscriptionId", required = false) Long aiSubscriptionId) {
-
+    public ResponseEntity<ResponseDto<List<SchedulerRespDto>>> getJobByUserAndSubscription(@RequestParam(value = "aiSubscriptionId", required = false) Long aiSubscriptionId) {
+        Long userId = CustomUserUtil.getCurrentUserId();
         List<SchedulerRespDto> respDtos = scheduledJobService.getJobByUserAndSubscription(userId, aiSubscriptionId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "스케줄 조회 성공", CustomDateUtil.toStringFormat(LocalDateTime.now()), respDtos), HttpStatus.OK);

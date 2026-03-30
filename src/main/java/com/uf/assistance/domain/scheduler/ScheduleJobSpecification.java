@@ -5,9 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 public class ScheduleJobSpecification {
 
     // 사용자 ID 조건
-    public static Specification<ScheduledJob> hasUserId(String userId) {
+    public static Specification<ScheduledJob> hasUserId(Long userId) {
         return (root, query, criteriaBuilder) ->
-                userId == null ? null : criteriaBuilder.equal(root.get("user").get("userId"), userId);
+                userId == null ? null : criteriaBuilder.equal(root.get("user").get("id"), userId);
     }
 
     // 숨김 여부 조건

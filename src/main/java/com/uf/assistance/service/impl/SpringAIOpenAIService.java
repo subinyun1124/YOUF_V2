@@ -139,7 +139,7 @@ public class SpringAIOpenAIService implements AIService {
     }
 
     @Override
-    public List<CustomAI> getCustomAIs(Boolean isActive, Boolean isHidden, String createdUserID) {
+    public List<CustomAI> getCustomAIs(Boolean isActive, Boolean isHidden, Long createdUserID) {
         logger.debug("CustomAI 조회 active : {} , hidden : {}, createUserID: {}", isActive, isHidden, createdUserID);
 
         Specification<CustomAI> spec = Specification.where(null);
@@ -152,7 +152,7 @@ public class SpringAIOpenAIService implements AIService {
             spec = spec.and(CustomAiSpecification.hasHidden(isHidden));
         }
 
-        if (createdUserID != null && !createdUserID.isEmpty()) {
+        if (createdUserID != null) {
             spec = spec.and(CustomAiSpecification.hasCreateUser(createdUserID));
         }
 
@@ -160,7 +160,7 @@ public class SpringAIOpenAIService implements AIService {
     }
 
     @Override
-    public Page<CustomAI> getCustomAIsWithPagination(Boolean isActive, Boolean isHidden, String createdUserID, Pageable pageable) {
+    public Page<CustomAI> getCustomAIsWithPagination(Boolean isActive, Boolean isHidden, Long createdUserID, Pageable pageable) {
         logger.debug("CustomAI 조회 active : {} , hidden : {}, createUserID: {}", isActive, isHidden, createdUserID);
 
         Specification<CustomAI> spec = Specification.where(null);
@@ -173,7 +173,7 @@ public class SpringAIOpenAIService implements AIService {
             spec = spec.and(CustomAiSpecification.hasHidden(isHidden));
         }
 
-        if (createdUserID != null && !createdUserID.isEmpty()) {
+        if (createdUserID != null) {
             spec = spec.and(CustomAiSpecification.hasCreateUser(createdUserID));
         }
 
