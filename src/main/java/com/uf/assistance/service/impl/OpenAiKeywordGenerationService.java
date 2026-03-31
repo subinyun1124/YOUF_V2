@@ -85,4 +85,39 @@ public class OpenAiKeywordGenerationService implements KeywordGenerationService 
             return Collections.emptyList();
         }
     }
+
+    public String generateChatResponse(String userMessage) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(apiKey);
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("model", "gpt-4o");
+
+            List<Map<String, String>> messages = new ArrayList<>();
+            messages.add(Map.of("role", "system", "content", "연애상담 AI입니다."));
+            messages.add(Map.of("role", "user", "content", userMessage));
+
+            requestBody.put("messages", messages);
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity(apiUrl, entity, String.class);
+
+            JsonNode responseNode = objectMapper.readTree(response.getBody());
+
+            return responseNode
+                    .get("choices")
+                    .get(0)
+                    .get("message")
+                    .get("content")
+                    .asText();
+
+        } catch (Exception e) {
+            logger.error("GPT 응답 생성 실패", e);
+            return "AI 응답 생성 중 오류가 발생했습니다.";
+        }
+    }
 }

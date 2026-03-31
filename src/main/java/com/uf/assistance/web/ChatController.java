@@ -61,15 +61,23 @@ public class ChatController {
     }
 
     @MessageMapping("/chat.sendMessage/{subscriptionId}")
-    @SendTo("/topic/public/ai/{subscriptionId}")
-    public ResponseEntity<?> sendMessage(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId) {
+    public void sendMessage(@Payload @Valid ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId) {
 
         System.out.println("받은 메시지: " + chatReqDto.getContent() + " / From : " + chatReqDto.getSender());
-        ChatRespDto chatRespDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
+//        ChatRespDto chatRespDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
+//
+//        messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, chatRespDto);
+        List<ChatRespDto> responses =
+                chatService.sendMessageSimple(chatReqDto, subscriptionId);
 
-        messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, chatRespDto);
+        for (ChatRespDto resp : responses) {
+            messagingTemplate.convertAndSend(
+                    "/topic/public/ai/" + subscriptionId,
+                    resp
+            );
+        }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "채팅 성공", CustomDateUtil.toStringFormat(LocalDateTime.now()), chatRespDto), HttpStatus.OK);
+//        return new ResponseEntity<>(new ResponseDto<>(1, "채팅 성공", CustomDateUtil.toStringFormat(LocalDateTime.now()), chatRespDto), HttpStatus.OK);
     }
 
     @MessageMapping("/chat.addUser/{subscriptionId}")

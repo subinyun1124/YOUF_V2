@@ -7,6 +7,7 @@ import com.uf.assistance.domain.chat.MessageType;
 import com.uf.assistance.domain.user.User;
 import com.uf.assistance.dto.message.ChatReqDto;
 import com.uf.assistance.dto.message.ChatRespDto;
+import com.uf.assistance.service.impl.OpenAiKeywordGenerationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class ChatService {
     private final AISubscriptionService aiSubscriptionService;
     private final OpenAiChatOptions openAiChatOptions;
     private final ChatKeywordService chatKeywordService;
+    private final OpenAiKeywordGenerationService openAiKeywordGenerationService;
 
     // 시스템 메시지 정의
     private final static String SYSTEM_INSTRUCTION = """
@@ -50,7 +52,7 @@ public class ChatService {
     public ChatRespDto sendMessageAI(ChatReqDto chatReqDto, Long aiSubscriptionId, MessageType messageType) {
         logger.debug("AI 메시지 전송 시작 (aiSubscriptionId: {})", aiSubscriptionId);
 
-        User user = userService.findUserEntityById(99L);
+        User user = userService.findUserEntityByUserId("GPT");
         AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(aiSubscriptionId);
 
         // 시스템 메시지와 사용자 메시지 간의 키워드 중간값 처리
@@ -97,6 +99,30 @@ public class ChatService {
         chatKeywordService.processMessageAndCreateLink(chatPersistence, chatReqDto.getContent());
 
         return ChatRespDto.from(chatPersistence);
+    }
+
+    @Transactional
+    public List<ChatRespDto> sendMessageSimple(ChatReqDto chatReqDto, Long aiSubscriptionId) {
+
+        User user = userService.findUserEntityById(chatReqDto.getSender());
+        AISubscription aiSubscription = aiSubscriptionService.getAISubScriptionById(aiSubscriptionId);
+
+        // 1. USER 저장
+        Chat userChat = ChatReqDto.toEntity(user, chatReqDto.getContent(), aiSubscription, MessageType.USER);
+        chatRepository.save(userChat);
+
+        // 2. OpenAI 호출 (Flask 없음)
+        String aiResponse = openAiKeywordGenerationService.generateChatResponse(chatReqDto.getContent());
+
+        // 3. AI 저장
+        User aiUser = userService.findUserEntityByUserId("GPT");
+        Chat aiChat = ChatReqDto.toEntity(aiUser, aiResponse, aiSubscription, MessageType.ASSISTANT);
+        chatRepository.save(aiChat);
+
+        return List.of(
+                ChatRespDto.from(userChat),
+                ChatRespDto.from(aiChat)
+        );
     }
 
     public List<Chat> getMessagesByAiId(Long aiSubscriptionId) {
