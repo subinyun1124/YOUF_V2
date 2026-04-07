@@ -32,10 +32,13 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     SELECT c FROM Chat c
     WHERE c.id IN (
         SELECT MAX(cm.id) FROM Chat cm
-        WHERE cm.sender.id = :userId
-            AND cm.type = 'ASSISTANT'
-        GROUP BY cm.aiSubscription.id
+        WHERE cm.aiSubscription.id IN (
+            SELECT a.id FROM AISubscription a
+            WHERE a.user.id = :userId
         )
+        GROUP BY cm.aiSubscription.id
+    )
+    ORDER BY c.timestamp DESC
     """)
     List<Chat> findLatestASSISTANTMessageBySender(@Param("userId") Long userId);
 }

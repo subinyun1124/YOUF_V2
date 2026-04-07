@@ -84,8 +84,8 @@ public class ChatController {
     @SendTo("/topic/public/{subscriptionId}")
     public ResponseEntity<?> addUser(@Payload ChatReqDto chatReqDto, @DestinationVariable("subscriptionId") Long subscriptionId
             , SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatReqDto.getSender());
+        // Add userId, subscriptionId in web socket session
+        headerAccessor.getSessionAttributes().put("userId", chatReqDto.getSender());
         headerAccessor.getSessionAttributes().put("subscriptionId", subscriptionId.toString());
 
         ChatRespDto chatRespDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.JOIN);
