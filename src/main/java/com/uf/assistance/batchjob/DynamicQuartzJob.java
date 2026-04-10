@@ -52,7 +52,7 @@ public class DynamicQuartzJob implements Job {
                 try {
                     HashMap<String, String> map = objectMapper.readValue(jobData, HashMap.class);
                     String prompt = map.get("prompt");
-                    Long senderName = Long.parseLong(map.get("senderName"));
+                    String senderName = map.get("senderName");
                     Long subscriptionId = Long.parseLong(map.get("subscriptionId"));
 
                     logger.info("Job '{}' prompt {}, senderName : {}, subscriptionId : {}", prompt, senderName, subscriptionId);
@@ -63,7 +63,7 @@ public class DynamicQuartzJob implements Job {
                     // 실제 로직 수행 (예: 메시지 전송)
                     logger.info("Job data: {}", dataMap);
                     ChatReqDto chatReqDto = ChatReqDto.builder()
-                            .sender(senderName)
+                            .sender(2L)
                             .content(prompt)
                             .build();
 
