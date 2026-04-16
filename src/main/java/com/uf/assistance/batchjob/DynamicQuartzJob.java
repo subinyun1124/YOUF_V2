@@ -2,7 +2,6 @@ package com.uf.assistance.batchjob;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uf.assistance.domain.chat.MessageType;
 import com.uf.assistance.dto.message.ChatReqDto;
 import com.uf.assistance.dto.message.ChatRespDto;
 import com.uf.assistance.service.ChatService;
@@ -16,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class DynamicQuartzJob implements Job {
@@ -67,11 +67,19 @@ public class DynamicQuartzJob implements Job {
                             .content(prompt)
                             .build();
 
-                    ChatRespDto userChatDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
-                    ChatRespDto aiChatDto = chatService.sendMessageAI(chatReqDto, subscriptionId, MessageType.ASSISTANT);
+//                    ChatRespDto userChatDto = chatService.sendMessage(chatReqDto, subscriptionId, MessageType.USER);
+//                    ChatRespDto aiChatDto = chatService.sendMessageAI(chatReqDto, subscriptionId, MessageType.ASSISTANT);
+//
+//                    messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, userChatDto);
+//                    messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, aiChatDto);
 
-                    messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, userChatDto);
-                    messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, aiChatDto);
+                    // Flask 없이 바로 OpenAI 호출
+                    List<ChatRespDto> chatRespDtos = chatService.sendMessageSimple(chatReqDto, subscriptionId);
+
+                    // user 메시지, AI 메시지 각각 WebSocket 전송
+                    chatRespDtos.forEach(dto ->
+                            messagingTemplate.convertAndSend("/topic/public/ai/" + subscriptionId, dto)
+                    );
 
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
